@@ -1,8 +1,9 @@
 //
 //  UnicodeCategoryS.swift
-//  xspmkit
+//  CharSet
 //
-//  Created by Pierre TACCHI on 11/10/2018.
+//  Copyright (c) Pierre Tacchi. All rights reserved.
+//  Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //
 
 extension UnicodeCategory {
