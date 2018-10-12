@@ -117,6 +117,14 @@ public struct CharSet {
         return CharSet(z.union(tab))
     }()
     
+    public static let whitespacesAndNewlines: CharSet = {
+        let z = Z.reduce(into: SetOfCharacter(), { (result, set) in
+            result.formUnion(set)
+        })
+        let tab = fromScalarArray([0x000A, 0x000B, 0x000C, 0x000D, 0x0085])
+        return CharSet(z.union(tab))
+    }()
+    
     private static func fromScalarArray(_ list: [UInt32]) -> SetOfCharacter {
         return SetOfCharacter(list.lazy.compactMap(UnicodeScalar.init).map(Character.init))
     }
