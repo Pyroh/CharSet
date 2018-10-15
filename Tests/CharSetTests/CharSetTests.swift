@@ -2,14 +2,8 @@ import XCTest
 @testable import CharSet
 
 final class CharSetTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(CharSet().text, "Hello, World!")
+    func testOperator() {
+        XCTAssert("e" ?= CharSet.lowercaseLetters)
+        XCTAssert("E" ?!= CharSet.lowercaseLetters)
     }
-
-    static var allTests = [
-        ("testExample", testExample),
-    ]
 }

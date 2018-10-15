@@ -8,6 +8,9 @@
 
 import Foundation
 
+infix operator ?=: ComparisonPrecedence
+infix operator ?!=: ComparisonPrecedence
+
 public struct CharSet {
     private typealias SetOfCharacter = Set<Character>
     
@@ -223,4 +226,12 @@ extension CharSet: ExpressibleByStringLiteral {
 
 public func ~=(lhs: CharSet, rhs: Character) -> Bool {
     return lhs.contains(rhs)
+}
+
+public func ?=(lhs: Character, rhs: CharSet) -> Bool {
+    return rhs.contains(lhs)
+}
+
+public func ?!=(lhs: Character, rhs: CharSet) -> Bool {
+    return !(lhs ?= rhs)
 }
