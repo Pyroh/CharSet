@@ -232,6 +232,14 @@ public func ?=(lhs: Character, rhs: CharSet) -> Bool {
     return rhs.contains(lhs)
 }
 
+public func ?=(lhs: Character, rhs: [CharSet]) -> Bool {
+    return rhs.lazy.map { lhs ?= $0 }.reduce(into: false, { $0 = $0 || $1 })
+}
+
 public func ?!=(lhs: Character, rhs: CharSet) -> Bool {
+    return !(lhs ?= rhs)
+}
+
+public func ?!=(lhs: Character, rhs: [CharSet]) -> Bool {
     return !(lhs ?= rhs)
 }
