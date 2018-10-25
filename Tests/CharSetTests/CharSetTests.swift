@@ -3,7 +3,16 @@ import XCTest
 
 final class CharSetTests: XCTestCase {
     func testOperator() {
-        XCTAssert("e" ?= CharSet.lowercaseLetters)
-        XCTAssert("E" ?!= CharSet.lowercaseLetters)
+        measure {
+            XCTAssert("e" ?= CharSet.lowercaseLetters)
+            XCTAssert("E" ?!= CharSet.lowercaseLetters)
+        }
+    }
+    
+    func testPerformances() {
+        measure {
+            print(CharSet.alphanumerics.count)
+            _ = CharSet.alphanumerics.contains("1")
+        }
     }
 }

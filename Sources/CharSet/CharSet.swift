@@ -11,11 +11,17 @@ import Foundation
 infix operator ?=: ComparisonPrecedence
 infix operator ?!=: ComparisonPrecedence
 
+
+
 public struct CharSet {
     private typealias SetOfCharacter = Set<Character>
     
     private var storage: SetOfCharacter
     private var isReversed: Bool
+    
+    public var count: Int {
+        return storage.count
+    }
     
     public init() {
         self.storage = []
@@ -42,138 +48,103 @@ public struct CharSet {
     }
     
     public static let alphanumerics: CharSet = {
-        let l = L.reduce(into: SetOfCharacter(), { (result, set) in
-            result.formUnion(set)
-        })
-        let m = M.reduce(into: SetOfCharacter(), { (result, set) in
-            result.formUnion(set)
-        })
-        let n = N.reduce(into: SetOfCharacter(), { (result, set) in
-            result.formUnion(set)
-        })
-        
-        return CharSet(l.union(m).union(n))
+        return L + M + N
     }()
     
     public static let capitalizedLetters: CharSet = {
-        return CharSet(Lt)
+        return Lt
     }()
     
     public static let controlCharacters: CharSet = {
-        return CharSet(Cc.union(Cf))
+        return Cc + Cf
     }()
     
     public static let decimalDigits: CharSet = {
-        return CharSet(Nd)
+        return Nd
     }()
     
     public static let letters: CharSet = {
-        let l = L.reduce(into: SetOfCharacter(), { (result, set) in
-            result.formUnion(set)
-        })
-        let m = M.reduce(into: SetOfCharacter(), { (result, set) in
-            result.formUnion(set)
-        })
-        
-        return CharSet(l.union(m))
+        return L + M
     }()
     
     public static let lowercaseLetters: CharSet = {
-        return CharSet(Ll)
+        return Ll
     }()
     
     public static let newlines: CharSet = {
-        let content: [UInt32] = [0x000A, 0x000B, 0x000C, 0x000D, 0x0085, 0x2028, 0x2029]
-        return CharSet(fromScalarArray(content))
+        return CharSet(["\u{000A}", "\u{000B}", "\u{000C}", "\u{000D}", "\u{0085}", "\u{2028}", "\u{2029}"])
     }()
     
     public static let nonBaseCharacters: CharSet = {
-        let m = M.reduce(into: SetOfCharacter(), { (result, set) in
-            result.formUnion(set)
-        })
-        return CharSet(m)
+        return M
     }()
     
     public static let punctuationCharacters: CharSet = {
-        let p = P.reduce(into: SetOfCharacter(), { (result, set) in
-            result.formUnion(set)
-        })
-        return CharSet(p)
+        return P
     }()
     
     public static let symbols: CharSet = {
-        let s = S.reduce(into: SetOfCharacter(), { (result, set) in
-            result.formUnion(set)
-        })
-        return CharSet(s)
+        return S
     }()
     
     public static let uppercaseLetters: CharSet = {
-        return CharSet(Lu.union(Lt))
+        return Lu + Lt
     }()
     
     public static let whitespaces: CharSet = {
-        let z = Z.reduce(into: SetOfCharacter(), { (result, set) in
-            result.formUnion(set)
-        })
-        let tab = fromScalarArray([0x0009])
-        return CharSet(z.union(tab))
+        return Z + CharSet("\u{0009}")
     }()
     
     public static let whitespacesAndNewlines: CharSet = {
-        let z = Z.reduce(into: SetOfCharacter(), { (result, set) in
-            result.formUnion(set)
-        })
-        let tab = fromScalarArray([0x000A, 0x000B, 0x000C, 0x000D, 0x0085])
-        return CharSet(z.union(tab))
+        return Z + CharSet(["\u{000A}", "\u{000B}", "\u{000C}", "\u{000D}", "\u{0085}"])
     }()
     
     private static func fromScalarArray(_ list: [UInt32]) -> SetOfCharacter {
         return SetOfCharacter(list.lazy.compactMap(UnicodeScalar.init).map(Character.init))
     }
     
-    private static let Lu: SetOfCharacter = fromScalarArray(UnicodeCategory.L.u())
-    private static let Ll: SetOfCharacter = fromScalarArray(UnicodeCategory.L.l())
-    private static let Lt: SetOfCharacter = fromScalarArray(UnicodeCategory.L.t())
-    private static let Lm: SetOfCharacter = fromScalarArray(UnicodeCategory.L.m())
-    private static let Lo: SetOfCharacter = fromScalarArray(UnicodeCategory.L.o())
-    private static var L: [SetOfCharacter] { return [Lu, Ll, Lt, Lm, Lo] }
+    private static let Lu: CharSet = UnicodeCategory.L.u()
+    private static let Ll: CharSet = UnicodeCategory.L.l()
+    private static let Lt: CharSet = UnicodeCategory.L.t()
+    private static let Lm: CharSet = UnicodeCategory.L.m()
+    private static let Lo: CharSet = UnicodeCategory.L.o()
+    private static var L:  CharSet { return Lu + Ll + Lt + Lm + Lo }
     
-    private static let Mn: SetOfCharacter = fromScalarArray(UnicodeCategory.M.n())
-    private static let Mc: SetOfCharacter = fromScalarArray(UnicodeCategory.M.c())
-    private static let Me: SetOfCharacter = fromScalarArray(UnicodeCategory.M.e())
-    private static var M: [SetOfCharacter] { return [Mn, Mc, Me] }
+    private static let Mn: CharSet = UnicodeCategory.M.n()
+    private static let Mc: CharSet = UnicodeCategory.M.c()
+    private static let Me: CharSet = UnicodeCategory.M.e()
+    private static var M:  CharSet { return Mn + Mc + Me }
     
-    private static let Nd: SetOfCharacter = fromScalarArray(UnicodeCategory.N.d())
-    private static let Nl: SetOfCharacter = fromScalarArray(UnicodeCategory.N.l())
-    private static let No: SetOfCharacter = fromScalarArray(UnicodeCategory.N.o())
-    private static var N: [SetOfCharacter] { return [Nd, Nl, No] }
+    private static let Nd: CharSet = UnicodeCategory.N.d()
+    private static let Nl: CharSet = UnicodeCategory.N.l()
+    private static let No: CharSet = UnicodeCategory.N.o()
+    private static var N:  CharSet { return Nd + Nl + No }
     
-    private static let Pc: SetOfCharacter = fromScalarArray(UnicodeCategory.P.c())
-    private static let Pd: SetOfCharacter = fromScalarArray(UnicodeCategory.P.d())
-    private static let Ps: SetOfCharacter = fromScalarArray(UnicodeCategory.P.s())
-    private static let Pe: SetOfCharacter = fromScalarArray(UnicodeCategory.P.e())
-    private static let Pi: SetOfCharacter = fromScalarArray(UnicodeCategory.P.i())
-    private static let Pf: SetOfCharacter = fromScalarArray(UnicodeCategory.P.f())
-    private static let Po: SetOfCharacter = fromScalarArray(UnicodeCategory.P.o())
-    private static var P: [SetOfCharacter] { return [Pc, Pd, Ps, Pe, Pi, Pf, Po] }
+    private static let Pc: CharSet = UnicodeCategory.P.c()
+    private static let Pd: CharSet = UnicodeCategory.P.d()
+    private static let Ps: CharSet = UnicodeCategory.P.s()
+    private static let Pe: CharSet = UnicodeCategory.P.e()
+    private static let Pi: CharSet = UnicodeCategory.P.i()
+    private static let Pf: CharSet = UnicodeCategory.P.f()
+    private static let Po: CharSet = UnicodeCategory.P.o()
+    private static var P:  CharSet { return Pc + Pd + Ps + Pe + Pi + Pf + Po }
     
-    private static let Sm: SetOfCharacter = fromScalarArray(UnicodeCategory.S.m())
-    private static let Sc: SetOfCharacter = fromScalarArray(UnicodeCategory.S.c())
-    private static let Sk: SetOfCharacter = fromScalarArray(UnicodeCategory.S.k())
-    private static let So: SetOfCharacter = fromScalarArray(UnicodeCategory.S.o())
-    private static var S: [SetOfCharacter] { return [Sm, Sc, Sk, So] }
+    private static let Sm: CharSet = UnicodeCategory.S.m()
+    private static let Sc: CharSet = UnicodeCategory.S.c()
+    private static let Sk: CharSet = UnicodeCategory.S.k()
+    private static let So: CharSet = UnicodeCategory.S.o()
+    private static var S:  CharSet { return Sm + Sc + Sk + So }
     
-    private static let Zs: SetOfCharacter = fromScalarArray(UnicodeCategory.Z.s())
-    private static let Zl: SetOfCharacter = fromScalarArray(UnicodeCategory.Z.l())
-    private static let Zp: SetOfCharacter = fromScalarArray(UnicodeCategory.Z.p())
-    private static var Z: [SetOfCharacter] { return [Zs, Zl, Zp] }
+    private static let Zs: CharSet = UnicodeCategory.Z.s()
+    private static let Zl: CharSet = UnicodeCategory.Z.l()
+    private static let Zp: CharSet = UnicodeCategory.Z.p()
+    private static var Z:  CharSet { return Zs + Zl + Zp }
     
-    private static let Cc: SetOfCharacter = fromScalarArray(UnicodeCategory.C.c())
-    private static let Cf: SetOfCharacter = fromScalarArray(UnicodeCategory.C.f())
-    private static let Cs: SetOfCharacter = fromScalarArray(UnicodeCategory.C.s())
-    private static let Co: SetOfCharacter = fromScalarArray(UnicodeCategory.C.o())
-    private static var C: [SetOfCharacter] { return [Cc, Cf, Cs, Co] }
+    private static let Cc: CharSet = UnicodeCategory.C.c()
+    private static let Cf: CharSet = UnicodeCategory.C.f()
+//    private static let Cs: CharSet = UnicodeCategory.C.s()
+    private static let Co: CharSet = UnicodeCategory.C.o()
+    private static var C:  CharSet { return Cc + Cf + Co }
 }
 
 extension CharSet: SetAlgebra {
@@ -242,4 +213,8 @@ public func ?!=(lhs: Character, rhs: CharSet) -> Bool {
 
 public func ?!=(lhs: Character, rhs: [CharSet]) -> Bool {
     return !(lhs ?= rhs)
+}
+
+public func +(lhs: CharSet, rhs: CharSet) -> CharSet {
+    return lhs.union(rhs)
 }

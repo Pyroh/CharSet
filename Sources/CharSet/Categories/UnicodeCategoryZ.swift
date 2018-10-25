@@ -8,16 +8,16 @@
 
 extension UnicodeCategory {
     struct Z {
-        static func s() -> [UInt32] {
-            return [0x0020, 0x00A0, 0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000]
+        static func s() -> CharSet {
+            return CharSet(["\u{0020}", "\u{00A0}", "\u{1680}", "\u{2000}", "\u{2001}", "\u{2002}", "\u{2003}", "\u{2004}", "\u{2005}", "\u{2006}", "\u{2007}", "\u{2008}", "\u{2009}", "\u{200A}", "\u{202F}", "\u{205F}", "\u{3000}"])
         }
         
-        static func l() -> [UInt32] {
-            return [0x2028]
+        static func l() -> CharSet {
+            return CharSet(["\u{2028}"])
         }
         
-        static func p() -> [UInt32] {
-            return [0x2029]
+        static func p() -> CharSet {
+            return CharSet(["\u{2029}"])
         }
     }
 }
